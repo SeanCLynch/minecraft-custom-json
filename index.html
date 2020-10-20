@@ -30,46 +30,32 @@
         <div class="col-md-4 order-md-2 mb-4">
 
         <!-- Header Area  -->
-        <h4 class="d-flex justify-content-between align-items-center mb-3">
+        <h4 id="summary-header" class="d-flex justify-content-between align-items-center mb-3">
             <span class="text-muted">Your World</span>
-            <span class="badge badge-secondary badge-pill">3</span>
+            <span class="badge badge-secondary badge-pill">0</span>
         </h4>
 
         <!-- Sidebar -->
-        <ul class="list-group mb-3">
-            <li class="list-group-item d-flex justify-content-between lh-condensed">
-            <div>
-                <h6 class="my-0">Product name</h6>
-                <small class="text-muted">Brief description</small>
-            </div>
-            <span class="text-muted">$12</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between lh-condensed">
-            <div>
-                <h6 class="my-0">Second product</h6>
-                <small class="text-muted">Brief description</small>
-            </div>
-            <span class="text-muted">$8</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between lh-condensed">
-            <div>
-                <h6 class="my-0">Third item</h6>
-                <small class="text-muted">Brief description</small>
-            </div>
-            <span class="text-muted">$5</span>
-            </li>
+        <ul id="summary-sidebar" class="list-group mb-3">
             <li class="list-group-item d-flex justify-content-between bg-light">
-            <div class="text-success">
-                <h6 class="my-0">Promo code</h6>
-                <small>EXAMPLECODE</small>
-            </div>
-            <span class="text-success">-$5</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between">
-            <span>Total (USD)</span>
-            <strong>$20</strong>
+                <div class="text-success">
+                    <h6 class="my-0">Your Seed</h6>
+                    <small></small>
+                </div>
+                <span class="text-success"></span>
             </li>
         </ul>
+
+        <!-- Sidebar Template -->
+        <template id="sidebarRow">
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+                <div>
+                    <h6 class="my-0">Product name</h6>
+                    <small class="text-muted">Brief description</small>
+                </div>
+                <span class="text-muted">$12</span>
+            </li>
+        </template>
 
         <!-- <form class="card p-2">
             <div class="input-group">
@@ -84,7 +70,7 @@
 
         <div class="col-md-8 order-md-1">
         <h4 class="mb-3">Custom World Settings</h4>
-        <form class="needs-validation" novalidate="">
+        <form id="worldForm" class="needs-validation" novalidate="">
 
             <!-- BONUS CHEST (Boolean) -->
             <div class="row">
@@ -121,6 +107,119 @@
                 </div>
             </div>
 
+            <hr id="endOfForm" class="mb-4">
+
+            <button id="addDimension" class="btn btn-secondary btn-md btn-block" type="button">Add Dimension</button>
+
+            <template id="dimensionTemplate" class="d-none">
+                <hr class="mb-4">
+
+                <div class="dimension-holder">
+                    <!-- NAME (string) -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="dimName">Dimension Name</label>
+                            <input type="text" class="form-control" id="dimName" placeholder="" value="" required="">
+                            <div class="invalid-feedback">
+                            Valid dimension name is required.
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="default-dim-names">Default Names</label>
+                            <select id="default-dim-names" class="custom-select">
+                                <option selected>Create Your Own</option>
+                                <option value="1">minecraft:overworld</option>
+                                <option value="2">minecraft:the_nether</option>
+                                <option value="3">minecraft:the_end</option>
+                                <option value="3">minecraft:overworld_caves</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- GENERATOR TYPE -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="genType">Generator Type</label>
+                            <input type="text" class="form-control" id="genType" placeholder="" value="" required="">
+                            <div class="invalid-feedback">
+                            Valid generator type name is required.
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="default-gen-types">Default Types</label>
+                            <select id="default-gen-types" class="custom-select">
+                                <option value="0" selected>Create Your Own</option>
+                                <option value="1">minecraft:noise</option>
+                                <option value="2">minecraft:flat</option>
+                                <option value="3">minecraft:debug</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- CUSTOM GEN TYPE OPTIONS - ULTRAWARM -->
+                    <div class="row gen-type-option">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="ultrawarm">
+                                <label class="form-check-label" for="ultrawarm">
+                                  Ultrawarm
+                                </label>
+                              </div>
+                        </div>
+                    </div>
+
+                    <!-- CUSTOM GEN TYPE OPTIONS - NATURAL -->
+                    <div class="row gen-type-option">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="natural">
+                                <label class="form-check-label" for="natural">
+                                  Natural
+                                </label>
+                              </div>
+                        </div>
+                    </div>
+
+                    <!-- CUSTOM GEN TYPE OPTIONS - COORDINATE SCALE -->
+                    <div class="row gen-type-option">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="coordinateScale">
+                                <label class="form-check-label" for="coordinateScale">
+                                  Coordinate Scale
+                                </label>
+                              </div>
+                        </div>
+                    </div>
+
+                    <!-- CUSTOM GEN TYPE OPTIONS - HAS SKYLIGHT -->
+                    <div class="row gen-type-option">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="hasSkylight">
+                                <label class="form-check-label" for="hasSkylight">
+                                  Has Skylight
+                                </label>
+                              </div>
+                        </div>
+                    </div>
+
+                    <!-- CUSTOM GEN TYPE OPTIONS - HAS CEILING -->
+                    <div class="row gen-type-option">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="hasCeiling">
+                                <label class="form-check-label" for="hasCeiling">
+                                  Has Ceiling
+                                </label>
+                              </div>
+                        </div>
+                    </div>
+
+                    
+                </div>
+            </template>
+
             <hr class="mb-4">
 
             <button id="generateBtn" class="btn btn-primary btn-lg btn-block" type="submit">Generate JSON</button>
@@ -129,7 +228,7 @@
 
             <div class="form-group">
                 <label for="JSONoutput">Your JSON:</label>
-                <textarea class="form-control" id="JSONoutput" rows="6"></textarea>
+                <textarea class="form-control" id="JSONoutput" rows="16"></textarea>
             </div>
 
         </form>
@@ -147,24 +246,102 @@
     </div>
 
     <script>
-        document.querySelector('#generateBtn').addEventListener('click', function (event) {
-            event.preventDefault();
+        var dimension_count = 0;
 
-            let output = {};
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelector('#addDimension').addEventListener('click', function (event) {
+                try {
+                    let dimensionTemplate = document.getElementById('dimensionTemplate').content.cloneNode(true);
+                    let dimension_num = dimension_count;
+                    dimension_count++;
 
-            let bonus_chest = document.querySelector('#bonusChest').checked;
-            output.bonus_chest = bonus_chest;
+                    // Set a unique ID for new dimension.
+                    let dimension_holder = dimensionTemplate.querySelector('.dimension-holder');
+                    dimension_holder.setAttribute('id', `dim-${dimension_num}`);
 
-            let generate_features = document.querySelector('#generateFeatures').checked;
-            output.generate_features = generate_features;
+                    // Update summary sidebar.
+                    let summary_template = document.getElementById('sidebarRow').content.cloneNode(true);
+                    summary_template.querySelector('li').setAttribute('id', `summary-${dimension_num}`);
+                    summary_template.querySelector('h6').textContent = "New Dimension";
+                    document.getElementById('summary-sidebar').appendChild(summary_template);
 
-            // TODO: Validate that `seed` is a number.
-            let seed = document.querySelector('#seed').value;
-            output.seed = seed;
+                    // Update summary header.
+                    let summary_header = document.getElementById('summary-header');
+                    summary_header.querySelector('.badge').textContent = dimension_num + 1;
 
-            let output_string = JSON.stringify(output, null, 4);
-            document.querySelector('#JSONoutput').value = output_string;
+                    // Add event handlers for new form. 
+
+                    // dimName - Dimension Names
+                    dimensionTemplate.getElementById('dimName').addEventListener('input', function (event) {
+                        let sb_item = document.querySelector(`li#summary-${dimension_num} h6`);
+                        sb_item.textContent = event.target.value;
+                    });
+                    dimensionTemplate.getElementById('default-dim-names').addEventListener('change', function (event) {
+                        if (event.target.selectedIndex == 0) return;
+                        let new_name = event.target.options[event.target.selectedIndex].text;
+                        document.querySelector(`#dim-${dimension_num} input#dimName`).value = new_name;
+                        document.querySelector(`li#summary-${dimension_num} h6`).textContent = new_name;
+                    });
+
+                    // genType - Generator Type
+                    dimensionTemplate.getElementById('default-gen-types').addEventListener('change', function (event) {
+                        if (event.target.selectedIndex == 0) {
+                            document.querySelectorAll('.gen-type-option').forEach(function (opt) {
+                                opt.classList.remove('d-none');
+                            });
+                        } else {
+                            let new_name = event.target.options[event.target.selectedIndex].text;
+                            document.querySelector(`#dim-${dimension_num} input#genType`).value = new_name;
+                            document.querySelectorAll('.gen-type-option').forEach(function (opt) {
+                                opt.classList.add('d-none');
+                            });
+                        }
+                    });
+
+
+
+                    // Add new dimension form to world form.
+                    let worldForm = document.getElementById('worldForm');
+                    let endOfForm = document.getElementById('endOfForm');
+                    let insertedNode = worldForm.insertBefore(dimensionTemplate, endOfForm);
+
+                } catch (e) {
+                    console.log(e);
+                }
+            });
+
+            document.querySelector('#generateBtn').addEventListener('click', function (event) {
+                event.preventDefault();
+
+                let output = {};
+
+                let bonus_chest = document.querySelector('#bonusChest').checked;
+                output.bonus_chest = bonus_chest;
+
+                let generate_features = document.querySelector('#generateFeatures').checked;
+                output.generate_features = generate_features;
+
+                let seed = document.querySelector('#seed').value;
+                output.seed = seed;
+
+                output.dimensions = {};
+                document.querySelectorAll('.dimension-holder').forEach(function (elem, idx) {
+                    let dim_name = elem.querySelector('#dimName').value;
+                    output.dimensions[dim_name] = {
+                        "index": idx
+                    };
+
+                    let genType = elem.querySelector('#genType').value;
+                    output.dimensions[dim_name]['generator'] = {
+                        "type": genType
+                    };
+                });
+
+                let output_string = JSON.stringify(output, null, 4);
+                document.querySelector('#JSONoutput').value = output_string;
+            });
         });
+
     </script>
 
     </body>
