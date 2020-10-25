@@ -157,6 +157,7 @@
                     </div>
 
                     <!-- CUSTOM GEN TYPE OPTIONS - ULTRAWARM -->
+
                     <div class="row gen-type-option">
                         <div class="col-md-6 mb-3">
                             <div class="form-check">
@@ -181,13 +182,12 @@
                     </div>
 
                     <!-- CUSTOM GEN TYPE OPTIONS - COORDINATE SCALE -->
+
                     <div class="row gen-type-option">
                         <div class="col-md-6 mb-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="coordinateScale">
-                                <label class="form-check-label" for="coordinateScale">
-                                  Coordinate Scale
-                                </label>
+                                <label for="coordinateScale">Coordinated Scale</label>
+                                <input type="number" class="form-control" id="coordinateScale" placeholder="0.0" value="" required="" step='0.001'>   
                               </div>
                         </div>
                     </div>
@@ -271,6 +271,8 @@
 
                     // Add event handlers for new form. 
 
+
+
                     // dimName - Dimension Names
                     dimensionTemplate.getElementById('dimName').addEventListener('input', function (event) {
                         let sb_item = document.querySelector(`li#summary-${dimension_num} h6`);
@@ -310,6 +312,7 @@
                 }
             });
 
+            // Event Listener for Generating
             document.querySelector('#generateBtn').addEventListener('click', function (event) {
                 event.preventDefault();
 
@@ -324,7 +327,9 @@
                 let seed = document.querySelector('#seed').value;
                 output.seed = seed;
 
+
                 output.dimensions = {};
+                // Handler for each dimension 
                 document.querySelectorAll('.dimension-holder').forEach(function (elem, idx) {
                     let dim_name = elem.querySelector('#dimName').value;
                     output.dimensions[dim_name] = {
@@ -335,7 +340,17 @@
                     output.dimensions[dim_name]['generator'] = {
                         "type": genType
                     };
+                    let ultrawarmBool = elem.querySelector('#ultrawarm').checked;
+                    output.dimensions[dim_name]['ultrawarm'] = ultrawarmBool;
+
+                    let naturalBool = elem.querySelector('#natural').checked;
+                    output.dimensions[dim_name]['natural'] = naturalBool;
+
+                    let coorinateScaleFloat = elem.querySelector('#coordinateScale').value;
+                    output.dimensions[dim_name]['coordinate_scale'] = Number(coorinateScaleFloat);
+                    
                 });
+            
 
                 let output_string = JSON.stringify(output, null, 4);
                 document.querySelector('#JSONoutput').value = output_string;
