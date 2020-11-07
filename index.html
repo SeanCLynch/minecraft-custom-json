@@ -8,6 +8,8 @@
     
     <!-- CSS only -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css" type="text/css" rel="stylesheet">
+
 
     <!-- JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -216,6 +218,92 @@
                         </div>
                     </div>
 
+                    <!-- CUSTOM AMBIENT LIGHT OPTIONS - AMBIENT LIGHT -->
+                    <div class="row gen-type-option">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check">
+                                <label for="ambientLight">
+                                    Ambient Light 
+                                </label>
+                                <input type="number" class="form-control" id="ambientLight" placeholder="0.5" value="0.5" required="" step='0.1' max='.5' min='-.5'>
+                              </div>
+                        </div>
+                    </div>
+                    <!-- CUSTOM FIXED TIME (THIS IS OPTIONAL) - FIXED TIME -->
+
+                    <div class="row gen-type-option">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="fixedTimeBool">
+                                <label class="form-check-label" for="fixedTimeBool">
+                                  Enable Fixed Time?
+                                </label>
+                              </div>
+                        </div>
+                    </div>
+                    <!-- fixedTimeBool should be Set to False as default and therefore will be invisible  Curerently not working. See event handler JAva code for more info. -->
+                    <!-- Input should go in a 100 value input much like millitary time. needs tweaking. curently printing 100 for 1am whereas it should be 0100 -->
+                    <div id= "fixedTime" class="row gen-type-option">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check">
+                                <label for="fixedTime">
+                                    Fixed Time
+                                </label>
+                                <input type="number" class="form-control" id="fixedTime" placeholder="0" value="" required="" step='100' max='2400' min='0'>
+                              </div>
+                        </div>
+                    </div>
+
+                    <!-- CUSTOM PIGLIN SAFE OPTION - PIGLIN SAFE -->
+                    <div class="row gen-type-option">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="piglinSafe">
+                                <label class="form-check-label" for="piglinSafe">
+                                    Piglin Safe
+                                </label>
+                              </div>
+                        </div>
+                    </div>
+
+                    <!-- CUSTOM BED WORKS OPTION - BED WORKS -->
+                    <div class="row gen-type-option">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="bedWorks">
+                                <label class="form-check-label" for="bedWorks">
+                                    Bed Works
+                                </label>
+                              </div>
+                        </div>
+                    </div>
+
+                    <!-- RESPAWN ANCHOR WORKS OPTION - ANCHOR WORKS -->
+                    <div class="row gen-type-option">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="respawnAnchorWorks">
+                                <label class="form-check-label" for="respawnAnchorWorks">
+                                    Respawn Anchor Works
+                                </label>
+                              </div>
+                        </div>
+                    </div>
+
+                    <!-- Logical Height Option - Logical Height -->
+                    <!-- As of 11/5/2020 No following Java. This is due to there being NO DEFAULT HEIGHT! Sean we will have to decide on what a default should be or research more: (  -->
+                    <div class="row gen-type-option">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check">
+                                <label for="fixedTime">
+                                    Logical Height 
+                                </label>
+                                <input type="number" class="form-control" id="logicalHeight" placeholder="" value="" required="" step='' max='' min=''>
+                              </div>
+                        </div>
+                    </div>
+                    
+
                     
                 </div>
             </template>
@@ -348,6 +436,31 @@
 
                     let coorinateScaleFloat = elem.querySelector('#coordinateScale').value;
                     output.dimensions[dim_name]['coordinate_scale'] = Number(coorinateScaleFloat);
+
+                    let hasSkylightBool = elem.querySelector('#hasSkylight').checked;
+                    output.dimensions[dim_name]['has_skylight'] = hasSkylightBool;
+
+                    let hasCeilingBool = elem.querySelector('#hasCeiling').checked;
+                    output.dimensions[dim_name]['has_ceiling'] = hasCeilingBool;
+
+                    let ambientLightFloat = elem.querySelector('#ambientLight').value;
+                    output.dimensions[dim_name]['ambient_light'] = Number(ambientLightFloat);
+
+                    // need a bool to see if fixed time is enabled...
+
+                    //11/7/2020 Code keeps returning "null" and logging undefined.
+                    let fixedTime = elem.querySelector('#fixedTime').value;
+                    output.dimensions[dim_name]['fixed_time'] = Number(fixedTime);
+                    console.log(fixedTime);
+                
+                    let piglinSafeBool = elem.querySelector('#piglinSafe').checked;
+                    output.dimensions[dim_name]['piglin_safe'] = piglinSafeBool;
+                    
+                    let bedWorksBool = elem.querySelector('#bedWorks').checked;
+                    output.dimensions[dim_name]['bed_works'] = bedWorksBool;
+
+                    let respawnAnchorWorksBool = elem.querySelector('#respawnAnchorWorks').checked;
+                    output.dimensions[dim_name]['respawn_anchor_works'] = respawnAnchorWorksBool;
                     
                 });
             
