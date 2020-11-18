@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+    <!-- METAINFO -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title>Minecraft Custom JSON Generator</title>
     
-    <!-- CSS only -->
+    <!-- CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css" type="text/css" rel="stylesheet">
 
 
-    <!-- JS, Popper.js, and jQuery -->
+    <!-- JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script src="WorldBuilder.js"></script>
 
 </head>
 <body class="bg-light">
@@ -24,8 +26,9 @@
             <path fill-rule="evenodd" d="M3.188 8L.264 9.559a.5.5 0 0 0 0 .882l7.5 4a.5.5 0 0 0 .47 0l7.5-4a.5.5 0 0 0 0-.882L12.813 8l-1.063.567L14.438 10 8 13.433 1.562 10 4.25 8.567 3.187 8z"/>
             <path fill-rule="evenodd" d="M7.765 1.559a.5.5 0 0 1 .47 0l7.5 4a.5.5 0 0 1 0 .882l-7.5 4a.5.5 0 0 1-.47 0l-7.5-4a.5.5 0 0 1 0-.882l7.5-4zM1.563 6L8 9.433 14.438 6 8 2.567 1.562 6z"/>
         </svg>
-        <h2>Minecraft Custom JSON Generator</h2>
-        <p class="lead">Custom is a world type that allow users to change the generation of the Overworld, Nether, and End dimensions as well as the ability to create custom dimensions. It is edited using a JSON file that is imported on the world creation screen.</p>
+        <h2>Minecraft Custom World JSON Generator</h2>
+        <p class="lead">"Custom" is a world type that allow users to modify the generation of the Overworld, Nether, and End dimensions. It also supports the ability to create new, custom dimensions. It is an editable .json file that is imported ingame in the world creation screen.</p>
+        <p>You can find, fix, and complain about this <a href="https://github.com/SeanCLynch/minecraft-custom-json">open source code</a> in it's github repository. If you run into edge-cases and problems, let us know - so we can all fix it! You can test some default builds by clicking on these links: <a href="#">default minecraft</a>, <a href="#">custom superflat dimension</a>, etc.</a></p>
     </div>
 
     <div class="row">
@@ -33,31 +36,31 @@
 
         <!-- Header Area  -->
         <h4 id="summary-header" class="d-flex justify-content-between align-items-center mb-3">
-            <span class="text-muted">Your World</span>
+            <span class="text-muted">Your World:</span>
             <span class="badge badge-secondary badge-pill">0</span>
         </h4>
 
         <!-- Sidebar -->
         <ul id="summary-sidebar" class="list-group mb-3">
+            <!-- Sidebar Template -->
+            <template id="sidebarRow">
+                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                        <h6 class="my-0">Product name</h6>
+                        <small class="text-muted">Brief description</small>
+                    </div>
+                    <span class="text-muted">$12</span>
+                </li>
+            </template>
+            <!-- Core Sidebar -->
             <li class="list-group-item d-flex justify-content-between bg-light">
                 <div class="text-success">
-                    <h6 class="my-0">Your Seed</h6>
+                    <h6 class="my-0">Seed</h6>
                     <small></small>
                 </div>
                 <span class="text-success"></span>
             </li>
         </ul>
-
-        <!-- Sidebar Template -->
-        <template id="sidebarRow">
-            <li class="list-group-item d-flex justify-content-between lh-condensed">
-                <div>
-                    <h6 class="my-0">Product name</h6>
-                    <small class="text-muted">Brief description</small>
-                </div>
-                <span class="text-muted">$12</span>
-            </li>
-        </template>
 
         <!-- <form class="card p-2">
             <div class="input-group">
@@ -82,6 +85,7 @@
                         <label class="form-check-label" for="bonusChest">
                           Bonus Chest
                         </label>
+                        <small class="form-text text-muted">Helper text placeholder.</small>
                       </div>
                 </div>
             </div>
@@ -94,6 +98,7 @@
                         <label class="form-check-label" for="generateFeatures">
                           Generate Features
                         </label>
+                        <small class="form-text text-muted">Helper text placeholder.</small>
                       </div>
                 </div>
             </div>
@@ -103,6 +108,7 @@
                 <div class="col-md-6 mb-3">
                     <label for="firstName">Seed</label>
                     <input type="text" class="form-control" id="seed" placeholder="" value="" required="">
+                    <small class="form-text text-muted">Helper text placeholder.</small>
                     <div class="invalid-feedback">
                     Valid seed is required.
                     </div>
@@ -121,7 +127,8 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="dimName">Dimension Name</label>
-                            <input type="text" class="form-control" id="dimName" placeholder="" value="" required="">
+                            <input type="text" class="form-control" id="dimName" placeholder="" value="minecraft:overworld" required="">
+                            <small class="form-text text-muted">Helper text placeholder.</small>
                             <div class="invalid-feedback">
                             Valid dimension name is required.
                             </div>
@@ -129,20 +136,23 @@
                         <div class="col-md-6 mb-3">
                             <label for="default-dim-names">Default Names</label>
                             <select id="default-dim-names" class="custom-select">
-                                <option selected>Create Your Own</option>
-                                <option value="1">minecraft:overworld</option>
+                                <option value="0">Create Your Own</option>
+                                <option value="1" selected>minecraft:overworld</option>
                                 <option value="2">minecraft:the_nether</option>
                                 <option value="3">minecraft:the_end</option>
                                 <option value="3">minecraft:overworld_caves</option>
                             </select>
+                            <small class="form-text text-muted">Helper text placeholder.</small>
                         </div>
+                        
                     </div>
 
                     <!-- GENERATOR TYPE -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="genType">Generator Type</label>
-                            <input type="text" class="form-control" id="genType" placeholder="" value="" required="">
+                            <input type="text" class="form-control" id="genType" placeholder="" value="minecraft:noise" required="">
+                            <small class="form-text text-muted">Helper text placeholder.</small>
                             <div class="invalid-feedback">
                             Valid generator type name is required.
                             </div>
@@ -150,151 +160,164 @@
                         <div class="col-md-6 mb-3">
                             <label for="default-gen-types">Default Types</label>
                             <select id="default-gen-types" class="custom-select">
-                                <option value="0" selected>Create Your Own</option>
-                                <option value="1">minecraft:noise</option>
+                                <option value="0">Create Your Own</option>
+                                <option value="1" selected>minecraft:noise</option>
                                 <option value="2">minecraft:flat</option>
                                 <option value="3">minecraft:debug</option>
                             </select>
+                            <small class="form-text text-muted">Helper text placeholder.</small>
                         </div>
                     </div>
 
                     <!-- CUSTOM GEN TYPE OPTIONS - ULTRAWARM -->
-                    <div class="row gen-type-option">
+                    <div class="row gen-type-option d-none">
                         <div class="col-md-6 mb-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="ultrawarm">
                                 <label class="form-check-label" for="ultrawarm">
                                   Ultrawarm
                                 </label>
+                                <small class="form-text text-muted">Helper text placeholder.</small>
                               </div>
                         </div>
                     </div>
 
                     <!-- CUSTOM GEN TYPE OPTIONS - NATURAL -->
-                    <div class="row gen-type-option">
+                    <div class="row gen-type-option d-none">
                         <div class="col-md-6 mb-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="natural">
                                 <label class="form-check-label" for="natural">
                                   Natural
                                 </label>
+                                <small class="form-text text-muted">Helper text placeholder.</small>
                               </div>
                         </div>
                     </div>
 
                     <!-- CUSTOM GEN TYPE OPTIONS - COORDINATE SCALE -->
-                    <div class="row gen-type-option">
+                    <div class="row gen-type-option d-none">
                         <div class="col-md-6 mb-3">
                             <div class="form-check">
                                 <label for="coordinateScale">Coordinated Scale</label>
-                                <input type="number" class="form-control" id="coordinateScale" placeholder="0.0" value="" required="" step='0.001'>   
+                                <input type="number" class="form-control" id="coordinateScale" placeholder="0.0" value="" required="" step='0.001'>  
+                                <small class="form-text text-muted">Helper text placeholder.</small> 
                               </div>
                         </div>
                     </div>
 
                     <!-- CUSTOM GEN TYPE OPTIONS - HAS SKYLIGHT -->
-                    <div class="row gen-type-option">
+                    <div class="row gen-type-option d-none">
                         <div class="col-md-6 mb-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="hasSkylight">
                                 <label class="form-check-label" for="hasSkylight">
                                   Has Skylight
                                 </label>
+                                <small class="form-text text-muted">Helper text placeholder.</small>
                               </div>
                         </div>
                     </div>
 
                     <!-- CUSTOM GEN TYPE OPTIONS - HAS CEILING -->
-                    <div class="row gen-type-option">
+                    <div class="row gen-type-option d-none">
                         <div class="col-md-6 mb-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="hasCeiling">
                                 <label class="form-check-label" for="hasCeiling">
                                   Has Ceiling
                                 </label>
+                                <small class="form-text text-muted">Helper text placeholder.</small>
                               </div>
                         </div>
                     </div>
 
                     <!-- CUSTOM AMBIENT LIGHT OPTIONS - AMBIENT LIGHT -->
-                    <div class="row gen-type-option">
+                    <div class="row gen-type-option d-none">
                         <div class="col-md-6 mb-3">
                             <div class="form-check">
                                 <label for="ambientLight">
                                     Ambient Light 
                                 </label>
                                 <input type="number" class="form-control" id="ambientLight" placeholder="0.5" value="0.5" required="" step='0.1' max='.5' min='-.5'>
+                                <small class="form-text text-muted">Helper text placeholder.</small>
                               </div>
                         </div>
                     </div>
 
                     <!-- CUSTOM FIXED TIME (THIS IS OPTIONAL) - FIXED TIME -->
-                    <div class="row gen-type-option">
+                    <div class="row gen-type-option d-none">
                         <div class="col-md-6 mb-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="fixedTimeBool">
                                 <label class="form-check-label" for="fixedTimeBool">
                                   Enable Fixed Time?
                                 </label>
+                                <small class="form-text text-muted">Helper text placeholder.</small>
                               </div>
                         </div>
                     </div>
-                    <div class="row gen-type-option">
+                    <div class="row gen-type-option d-none">
                         <div class="col-md-6 mb-3">
                             <div class="form-check">
                                 <label for="fixedTime">
                                     Fixed Time
                                 </label>
                                 <input type="number" class="form-control" id="fixedTime" placeholder="0" value="" required="" step='100' max='2400' min='0' disabled="">
+                                <small class="form-text text-muted">Helper text placeholder.</small>
                               </div>
                         </div>
                     </div>
 
                     <!-- CUSTOM PIGLIN SAFE OPTION - PIGLIN SAFE -->
-                    <div class="row gen-type-option">
+                    <div class="row gen-type-option d-none">
                         <div class="col-md-6 mb-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="piglinSafe">
                                 <label class="form-check-label" for="piglinSafe">
                                     Piglin Safe
                                 </label>
+                                <small class="form-text text-muted">Helper text placeholder.</small>
                               </div>
                         </div>
                     </div>
 
                     <!-- CUSTOM BED WORKS OPTION - BED WORKS -->
-                    <div class="row gen-type-option">
+                    <div class="row gen-type-option d-none">
                         <div class="col-md-6 mb-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="bedWorks">
                                 <label class="form-check-label" for="bedWorks">
                                     Bed Works
                                 </label>
+                                <small class="form-text text-muted">Helper text placeholder.</small>
                               </div>
                         </div>
                     </div>
 
                     <!-- RESPAWN ANCHOR WORKS OPTION - ANCHOR WORKS -->
-                    <div class="row gen-type-option">
+                    <div class="row gen-type-option d-none">
                         <div class="col-md-6 mb-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="respawnAnchorWorks">
                                 <label class="form-check-label" for="respawnAnchorWorks">
                                     Respawn Anchor Works
                                 </label>
+                                <small class="form-text text-muted">Helper text placeholder.</small>
                               </div>
                         </div>
                     </div>
 
                     <!-- Logical Height Option - Logical Height -->
                     <!-- As of 11/5/2020 No following Java. This is due to there being NO DEFAULT HEIGHT! Sean we will have to decide on what a default should be or research more: (  -->
-                    <div class="row gen-type-option">
+                    <div class="row gen-type-option d-none">
                         <div class="col-md-6 mb-3">
                             <div class="form-check">
                                 <label for="fixedTime">
                                     Logical Height 
                                 </label>
                                 <input type="number" class="form-control" id="logicalHeight" placeholder="" value="" required="" step='' max='' min=''>
+                                <small class="form-text text-muted">Helper text placeholder.</small>
                               </div>
                         </div>
                     </div>
@@ -320,7 +343,6 @@
     </div>
 
     <footer class="my-5 pt-5 text-muted text-center text-small">
-        <p class="mb-1">© 2017-2020 Company Name</p>
         <ul class="list-inline">
         <li class="list-inline-item"><a href="#">Privacy</a></li>
         <li class="list-inline-item"><a href="#">Terms</a></li>
@@ -329,151 +351,7 @@
     </footer>
     </div>
 
-    <script>
-        var dimension_count = 0;
-
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelector('#addDimension').addEventListener('click', function (event) {
-                try {
-                    let dimensionTemplate = document.getElementById('dimensionTemplate').content.cloneNode(true);
-                    let dimension_num = dimension_count;
-                    dimension_count++;
-
-                    // Set a unique ID for new dimension.
-                    let dimension_holder = dimensionTemplate.querySelector('.dimension-holder');
-                    dimension_holder.setAttribute('id', `dim-${dimension_num}`);
-
-                    // Update summary sidebar.
-                    let summary_template = document.getElementById('sidebarRow').content.cloneNode(true);
-                    summary_template.querySelector('li').setAttribute('id', `summary-${dimension_num}`);
-                    summary_template.querySelector('h6').textContent = "New Dimension";
-                    document.getElementById('summary-sidebar').appendChild(summary_template);
-
-                    // Update summary header.
-                    let summary_header = document.getElementById('summary-header');
-                    summary_header.querySelector('.badge').textContent = dimension_num + 1;
-
-                    // Add event handlers for new form. 
-
-
-
-                    // dimName - Dimension Names
-                    dimensionTemplate.getElementById('dimName').addEventListener('input', function (event) {
-                        let sb_item = document.querySelector(`li#summary-${dimension_num} h6`);
-                        sb_item.textContent = event.target.value;
-                    });
-                    dimensionTemplate.getElementById('default-dim-names').addEventListener('change', function (event) {
-                        if (event.target.selectedIndex == 0) return;
-                        let new_name = event.target.options[event.target.selectedIndex].text;
-                        document.querySelector(`#dim-${dimension_num} input#dimName`).value = new_name;
-                        document.querySelector(`li#summary-${dimension_num} h6`).textContent = new_name;
-                    });
-
-                    // genType - Generator Type
-                    dimensionTemplate.getElementById('default-gen-types').addEventListener('change', function (event) {
-                        if (event.target.selectedIndex == 0) {
-                            document.querySelectorAll('.gen-type-option').forEach(function (opt) {
-                                opt.classList.remove('d-none');
-                            });
-                        } else {
-                            let new_name = event.target.options[event.target.selectedIndex].text;
-                            document.querySelector(`#dim-${dimension_num} input#genType`).value = new_name;
-                            document.querySelectorAll('.gen-type-option').forEach(function (opt) {
-                                opt.classList.add('d-none');
-                            });
-                        }
-                    });
-
-                    // fixedTime toggle 
-                    dimensionTemplate.getElementById('fixedTimeBool').addEventListener('change', function (event) {
-                        if (event.target.checked) {
-                            document.querySelector(`#dim-${dimension_num} input#fixedTime`).removeAttribute('disabled');
-                        } else {
-                            document.querySelector(`#dim-${dimension_num} input#fixedTime`).setAttribute('disabled', '');
-                        }
-                    });
-
-                    // Add new dimension form to world form.
-                    let worldForm = document.getElementById('worldForm');
-                    let endOfForm = document.getElementById('endOfForm');
-                    let insertedNode = worldForm.insertBefore(dimensionTemplate, endOfForm);
-
-                } catch (e) {
-                    console.log(e);
-                }
-            });
-
-            // Event Listener for Generating
-            document.querySelector('#generateBtn').addEventListener('click', function (event) {
-                event.preventDefault();
-
-                let output = {};
-
-                let bonus_chest = document.querySelector('#bonusChest').checked;
-                output.bonus_chest = bonus_chest;
-
-                let generate_features = document.querySelector('#generateFeatures').checked;
-                output.generate_features = generate_features;
-
-                let seed = document.querySelector('#seed').value;
-                output.seed = seed;
-
-
-                output.dimensions = {};
-                // Handler for each dimension 
-                document.querySelectorAll('.dimension-holder').forEach(function (elem, idx) {
-                    let dim_name = elem.querySelector('#dimName').value;
-                    output.dimensions[dim_name] = {
-                        "index": idx
-                    };
-
-                    let genType = elem.querySelector('#genType').value;
-                    output.dimensions[dim_name]['generator'] = {
-                        "type": genType
-                    };
-
-                    let ultrawarmBool = elem.querySelector('#ultrawarm').checked;
-                    output.dimensions[dim_name]['ultrawarm'] = ultrawarmBool;
-
-                    let naturalBool = elem.querySelector('#natural').checked;
-                    output.dimensions[dim_name]['natural'] = naturalBool;
-
-                    let coorinateScaleFloat = elem.querySelector('#coordinateScale').value;
-                    output.dimensions[dim_name]['coordinate_scale'] = Number(coorinateScaleFloat);
-
-                    let hasSkylightBool = elem.querySelector('#hasSkylight').checked;
-                    output.dimensions[dim_name]['has_skylight'] = hasSkylightBool;
-
-                    let hasCeilingBool = elem.querySelector('#hasCeiling').checked;
-                    output.dimensions[dim_name]['has_ceiling'] = hasCeilingBool;
-
-                    let ambientLightFloat = elem.querySelector('#ambientLight').value;
-                    output.dimensions[dim_name]['ambient_light'] = Number(ambientLightFloat);
-
-                    let fixedTimeEnabled = document.querySelector('#fixedTimeBool').checked;
-                    if (fixedTimeEnabled) {
-                        let fixedTime = elem.querySelector('#fixedTime').value;
-                        output.dimensions[dim_name]['fixed_time'] = Number(fixedTime);
-                    }                    
-                
-                    let piglinSafeBool = elem.querySelector('#piglinSafe').checked;
-                    output.dimensions[dim_name]['piglin_safe'] = piglinSafeBool;
-                    
-                    let bedWorksBool = elem.querySelector('#bedWorks').checked;
-                    output.dimensions[dim_name]['bed_works'] = bedWorksBool;
-
-                    let respawnAnchorWorksBool = elem.querySelector('#respawnAnchorWorks').checked;
-                    output.dimensions[dim_name]['respawn_anchor_works'] = respawnAnchorWorksBool;
-                    
-                });
-            
-
-                let output_string = JSON.stringify(output, null, 4);
-                document.querySelector('#JSONoutput').value = output_string;
-            });
-        });
-
-    </script>
+    
 
     </body>
 </html>
