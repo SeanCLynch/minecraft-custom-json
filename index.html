@@ -159,7 +159,6 @@
                     </div>
 
                     <!-- CUSTOM GEN TYPE OPTIONS - ULTRAWARM -->
-
                     <div class="row gen-type-option">
                         <div class="col-md-6 mb-3">
                             <div class="form-check">
@@ -184,7 +183,6 @@
                     </div>
 
                     <!-- CUSTOM GEN TYPE OPTIONS - COORDINATE SCALE -->
-
                     <div class="row gen-type-option">
                         <div class="col-md-6 mb-3">
                             <div class="form-check">
@@ -229,8 +227,8 @@
                               </div>
                         </div>
                     </div>
-                    <!-- CUSTOM FIXED TIME (THIS IS OPTIONAL) - FIXED TIME -->
 
+                    <!-- CUSTOM FIXED TIME (THIS IS OPTIONAL) - FIXED TIME -->
                     <div class="row gen-type-option">
                         <div class="col-md-6 mb-3">
                             <div class="form-check">
@@ -241,15 +239,13 @@
                               </div>
                         </div>
                     </div>
-                    <!-- fixedTimeBool should be Set to False as default and therefore will be invisible  Curerently not working. See event handler JAva code for more info. -->
-                    <!-- Input should go in a 100 value input much like millitary time. needs tweaking. curently printing 100 for 1am whereas it should be 0100 -->
-                    <div id= "fixedTime" class="row gen-type-option">
+                    <div class="row gen-type-option">
                         <div class="col-md-6 mb-3">
                             <div class="form-check">
                                 <label for="fixedTime">
                                     Fixed Time
                                 </label>
-                                <input type="number" class="form-control" id="fixedTime" placeholder="0" value="" required="" step='100' max='2400' min='0'>
+                                <input type="number" class="form-control" id="fixedTime" placeholder="0" value="" required="" step='100' max='2400' min='0' disabled="">
                               </div>
                         </div>
                     </div>
@@ -388,7 +384,14 @@
                         }
                     });
 
-
+                    // fixedTime toggle 
+                    dimensionTemplate.getElementById('fixedTimeBool').addEventListener('change', function (event) {
+                        if (event.target.checked) {
+                            document.querySelector(`#dim-${dimension_num} input#fixedTime`).removeAttribute('disabled');
+                        } else {
+                            document.querySelector(`#dim-${dimension_num} input#fixedTime`).setAttribute('disabled', '');
+                        }
+                    });
 
                     // Add new dimension form to world form.
                     let worldForm = document.getElementById('worldForm');
@@ -428,6 +431,7 @@
                     output.dimensions[dim_name]['generator'] = {
                         "type": genType
                     };
+
                     let ultrawarmBool = elem.querySelector('#ultrawarm').checked;
                     output.dimensions[dim_name]['ultrawarm'] = ultrawarmBool;
 
@@ -446,12 +450,11 @@
                     let ambientLightFloat = elem.querySelector('#ambientLight').value;
                     output.dimensions[dim_name]['ambient_light'] = Number(ambientLightFloat);
 
-                    // need a bool to see if fixed time is enabled...
-
-                    //11/7/2020 Code keeps returning "null" and logging undefined.
-                    let fixedTime = elem.querySelector('#fixedTime').value;
-                    output.dimensions[dim_name]['fixed_time'] = Number(fixedTime);
-                    console.log(fixedTime);
+                    let fixedTimeEnabled = document.querySelector('#fixedTimeBool').checked;
+                    if (fixedTimeEnabled) {
+                        let fixedTime = elem.querySelector('#fixedTime').value;
+                        output.dimensions[dim_name]['fixed_time'] = Number(fixedTime);
+                    }                    
                 
                     let piglinSafeBool = elem.querySelector('#piglinSafe').checked;
                     output.dimensions[dim_name]['piglin_safe'] = piglinSafeBool;
