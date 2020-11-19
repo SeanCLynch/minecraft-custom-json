@@ -14,15 +14,20 @@ class WorldBuilder {
             self.export();
         });
         this._addDimension.addEventListener("click", function() {
-            self.addDimension(self._dimCount);
+            self.addDimension();
         });
         this._seedInput.addEventListener('keyup', function(event) {
             var seed_sidebar = document.querySelector('#displaySeed');
             seed_sidebar.textContent = event.target.value;
         });
 
-        // Initialize with default 3 dimensions?
-        
+        // Initialize with default 3 dimensions.
+        this.addDimension();
+        this._dimensions[0].setDefaultOverworld();
+        this.addDimension();
+        this._dimensions[1].setDefaultNether();
+        this.addDimension();
+        this._dimensions[2].setDefaultEnd();
     }
 
     import() {
@@ -135,12 +140,18 @@ class Dimension {
         dimensionTemplate.getElementById('deleteDimensionBtn').addEventListener('click', function (event) {
             event.preventDefault();
 
+            // Remove dimension for WorldBuilder class.
             self._wb.removeDimension(idNum);
 
+            // Remove dimension from form. 
             let whole_dimension = document.querySelector(`#dim-${idNum}`);
             let dim_hr_tag = whole_dimension.previousElementSibling;
             whole_dimension.parentElement.removeChild(dim_hr_tag);
             whole_dimension.parentElement.removeChild(whole_dimension);
+
+            // Remove dimension from sidebar.
+            let dim_sidebar = document.querySelector(`#summary-${idNum}`);
+            dim_sidebar.parentElement.removeChild(dim_sidebar);
         });
 
         // Add new dimension form to world form.
@@ -197,6 +208,41 @@ class Dimension {
         miniOutput['respawn_anchor_works'] = respawnAnchorWorksBool;
 
         return miniOutput;
+    }
+
+    setDefaultOverworld() {
+        console.log(`setting dimension ${this._idNum} to overworld`);
+        var currDim = document.querySelector(`#dim-${this._idNum}`);
+
+        // Update titles
+        document.querySelector(`li#summary-${this._idNum} h6`).textContent = "minecraft:overworld";
+        document.querySelector(`#dim-${this._idNum} #displayName`).textContent = "minecraft:overworld";
+    }
+
+    setDefaultNether() {
+        console.log(`setting dimension ${this._idNum} to nether`);
+        var currDim = document.querySelector(`#dim-${this._idNum}`);
+
+        // Update titles
+        document.querySelector(`li#summary-${this._idNum} h6`).textContent = "minecraft:the_nether";
+        document.querySelector(`#dim-${this._idNum} #displayName`).textContent = "minecraft:the_nether";
+
+        // Update dimension name.
+        document.querySelector(`#dim-${this._idNum} #dimName`).value = "minecraft:the_nether";
+        document.querySelector(`#dim-${this._idNum} #default-dim-names`).selectedIndex = 2;
+    }
+
+    setDefaultEnd() {
+        console.log(`setting dimension ${this._idNum} to end`);
+        var currDim = document.querySelector(`#dim-${this._idNum}`);
+
+        // Update titles
+        document.querySelector(`li#summary-${this._idNum} h6`).textContent = "minecraft:the_end";
+        document.querySelector(`#dim-${this._idNum} #displayName`).textContent = "minecraft:the_end";
+
+        // Update dimension name.
+        document.querySelector(`#dim-${this._idNum} #dimName`).value = "minecraft:the_end";
+        document.querySelector(`#dim-${this._idNum} #default-dim-names`).selectedIndex = 3;
     }
 
 }
