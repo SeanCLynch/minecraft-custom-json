@@ -5,15 +5,20 @@ class WorldBuilder {
         this._dimCount = 0;
         this._generateButton = document.querySelector("#generateBtn");
         this._addDimension = document.querySelector("#addDimension");
+        this._seedInput = document.querySelector('#seed');
 
         // Set event handlers. 
         var self = this;
-        this._generateButton.addEventListener("click", function(event){
+        this._generateButton.addEventListener("click", function(event) {
             event.preventDefault();
             self.export();
         });
-        this._addDimension.addEventListener("click", function(){
+        this._addDimension.addEventListener("click", function() {
             self.addDimension(self._dimCount);
+        });
+        this._seedInput.addEventListener('keyup', function(event) {
+            var seed_sidebar = document.querySelector('#displaySeed');
+            seed_sidebar.textContent = event.target.value;
         });
 
         // Initialize with default 3 dimensions?
