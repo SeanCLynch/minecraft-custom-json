@@ -1,82 +1,30 @@
 var dimension_count = 0;
 
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelector('#addDimension').addEventListener('click', function (event) {
-        try {
-            let dimensionTemplate = document.getElementById('dimensionTemplate').content.cloneNode(true);
-            let dimension_num = dimension_count;
-            dimension_count++;
+class WorldBuilder {
+    constructor(){
+        // Add 3 dimensions inside constructor
+        this._dimensions = [];
+        this._dimCount = 0;
+        this._generateButton = document.querySelector("#generateBtn");
+        this._addDimension = document.querySelector("#addDimension");
+        var self = this;
+        this._generateButton.addEventListener("click", function(event){
+            event.preventDefault();
+            self.export();
+        });
+        this._addDimension.addEventListener("click", function(){
+            self.addDimension(self._dimCount);
+        });
+        
+    }
 
-            // Set a unique ID for new dimension.
-            let dimension_holder = dimensionTemplate.querySelector('.dimension-holder');
-            dimension_holder.setAttribute('id', `dim-${dimension_num}`);
+    import(){
+        //Build for for JSON object
+    }
 
-            // Update summary sidebar.
-            let summary_template = document.getElementById('sidebarRow').content.cloneNode(true);
-            summary_template.querySelector('li').setAttribute('id', `summary-${dimension_num}`);
-            summary_template.querySelector('h6').textContent = "New Dimension";
-            document.getElementById('summary-sidebar').appendChild(summary_template);
-
-            // Update summary header.
-            let summary_header = document.getElementById('summary-header');
-            summary_header.querySelector('.badge').textContent = dimension_num + 1;
-
-            // Add event handlers for new form. 
-
-
-
-            // dimName - Dimension Names
-            dimensionTemplate.getElementById('dimName').addEventListener('input', function (event) {
-                let sb_item = document.querySelector(`li#summary-${dimension_num} h6`);
-                sb_item.textContent = event.target.value;
-            });
-            dimensionTemplate.getElementById('default-dim-names').addEventListener('change', function (event) {
-                if (event.target.selectedIndex == 0) return;
-                let new_name = event.target.options[event.target.selectedIndex].text;
-                document.querySelector(`#dim-${dimension_num} input#dimName`).value = new_name;
-                document.querySelector(`li#summary-${dimension_num} h6`).textContent = new_name;
-            });
-
-            // genType - Generator Type
-            dimensionTemplate.getElementById('default-gen-types').addEventListener('change', function (event) {
-                if (event.target.selectedIndex == 0) {
-                    document.querySelectorAll(`#dim-${dimension_num} .gen-type-option`).forEach(function (opt) {
-                        opt.classList.remove('d-none');
-                    });
-                } else {
-                    let new_name = event.target.options[event.target.selectedIndex].text;
-                    document.querySelector(`#dim-${dimension_num} input#genType`).value = new_name;
-                    document.querySelectorAll(`#dim-${dimension_num} .gen-type-option`).forEach(function (opt) {
-                        opt.classList.add('d-none');
-                    });
-                }
-            });
-
-            // fixedTime toggle 
-            dimensionTemplate.getElementById('fixedTimeBool').addEventListener('change', function (event) {
-                if (event.target.checked) {
-                    document.querySelector(`#dim-${dimension_num} input#fixedTime`).removeAttribute('disabled');
-                } else {
-                    document.querySelector(`#dim-${dimension_num} input#fixedTime`).setAttribute('disabled', '');
-                }
-            });
-
-            // Add new dimension form to world form.
-            let worldForm = document.getElementById('worldForm');
-            let endOfForm = document.getElementById('endOfForm');
-            let insertedNode = worldForm.insertBefore(dimensionTemplate, endOfForm);
-
-        } catch (e) {
-            console.log(e);
-        }
-    });
-
-    // Event Listener for Generating
-    document.querySelector('#generateBtn').addEventListener('click', function (event) {
-        event.preventDefault();
-
+    export(){
         let output = {};
-
+        //Build all whole JSON object from form
         let bonus_chest = document.querySelector('#bonusChest').checked;
         output.bonus_chest = bonus_chest;
 
@@ -86,71 +34,152 @@ document.addEventListener('DOMContentLoaded', function () {
         let seed = document.querySelector('#seed').value;
         output.seed = seed;
 
-
-        output.dimensions = {};
-        // Handler for each dimension 
-        document.querySelectorAll('.dimension-holder').forEach(function (elem, idx) {
-            let dim_name = elem.querySelector('#dimName').value;
-
-            let genType = elem.querySelector('#genType').value;
-            output.dimensions[dim_name]['generator'] = {
-                "type": genType
-            };
-
-            let ultrawarmBool = elem.querySelector('#ultrawarm').checked;
-            output.dimensions[dim_name]['ultrawarm'] = ultrawarmBool;
-
-            let naturalBool = elem.querySelector('#natural').checked;
-            output.dimensions[dim_name]['natural'] = naturalBool;
-
-            let coorinateScaleFloat = elem.querySelector('#coordinateScale').value;
-            output.dimensions[dim_name]['coordinate_scale'] = Number(coorinateScaleFloat);
-
-            let hasSkylightBool = elem.querySelector('#hasSkylight').checked;
-            output.dimensions[dim_name]['has_skylight'] = hasSkylightBool;
-
-            let hasCeilingBool = elem.querySelector('#hasCeiling').checked;
-            output.dimensions[dim_name]['has_ceiling'] = hasCeilingBool;
-
-            let ambientLightFloat = elem.querySelector('#ambientLight').value;
-            output.dimensions[dim_name]['ambient_light'] = Number(ambientLightFloat);
-
-            let fixedTimeEnabled = document.querySelector('#fixedTimeBool').checked;
-            if (fixedTimeEnabled) {
-                let fixedTime = elem.querySelector('#fixedTime').value;
-                output.dimensions[dim_name]['fixed_time'] = Number(fixedTime);
-            }                    
-        
-            let piglinSafeBool = elem.querySelector('#piglinSafe').checked;
-            output.dimensions[dim_name]['piglin_safe'] = piglinSafeBool;
-            
-            let bedWorksBool = elem.querySelector('#bedWorks').checked;
-            output.dimensions[dim_name]['bed_works'] = bedWorksBool;
-
-            let respawnAnchorWorksBool = elem.querySelector('#respawnAnchorWorks').checked;
-            output.dimensions[dim_name]['respawn_anchor_works'] = respawnAnchorWorksBool;
-            
+        console.log("export succesful");
+        this._dimensions.forEach(dim => {
+            var dimOutput = dim.export();
+            output[dimOutput.name] = dimOutput;
+            console.log(dimOutput);
         });
-    
-
         let output_string = JSON.stringify(output, null, 4);
         document.querySelector('#JSONoutput').value = output_string;
+    }
+
+    addDimension(){
+        //Create new dimension and add to dimension array (this._dimensions)
+        let newDimension = new Dimension(this._dimCount);
+        this._dimCount++;
+        console.log(`Dimension added Succesfully. ${this._dimCount}`)
+        this._dimensions.push(newDimension);
+    }
+
+    removeDimension(){
+        //Remove Dimension from Array
+    }
+
+    
+}
+
+class Dimension {
+    constructor(idNum){
+        this._idNum = idNum;
+        let dimensionTemplate = document.getElementById('dimensionTemplate').content.cloneNode(true);
+        // Set a unique ID for new dimension.
+        let dimension_holder = dimensionTemplate.querySelector('.dimension-holder');
+        dimension_holder.setAttribute('id', `dim-${idNum}`);
+        // Update summary sidebar.
+        let summary_template = document.getElementById('sidebarRow').content.cloneNode(true);
+        summary_template.querySelector('li').setAttribute('id', `summary-${idNum}`);
+        summary_template.querySelector('h6').textContent = "New Dimension";
+        document.getElementById('summary-sidebar').appendChild(summary_template);
+         // Update summary header.
+        let summary_header = document.getElementById('summary-header');
+        summary_header.querySelector('.badge').textContent = idNum + 1;
+        // dimName - Dimension Names
+        dimensionTemplate.getElementById('dimName').addEventListener('input', function (event) {
+            let sb_item = document.querySelector(`li#summary-${idNum} h6`);
+            sb_item.textContent = event.target.value;
+        });
+        dimensionTemplate.getElementById('default-dim-names').addEventListener('change', function (event) {
+            if (event.target.selectedIndex == 0) return;
+            let new_name = event.target.options[event.target.selectedIndex].text;
+            document.querySelector(`#dim-${idNum} input#dimName`).value = new_name;
+            document.querySelector(`li#summary-${idNum} h6`).textContent = new_name;
+        });
+
+        // genType - Generator Type
+        dimensionTemplate.getElementById('default-gen-types').addEventListener('change', function (event) {
+            if (event.target.selectedIndex == 0) {
+                document.querySelectorAll(`#dim-${idNum} .gen-type-option`).forEach(function (opt) {
+                    opt.classList.remove('d-none');
+                });
+            } else {
+                let new_name = event.target.options[event.target.selectedIndex].text;
+                document.querySelector(`#dim-${idNum} input#genType`).value = new_name;
+                document.querySelectorAll(`#dim-${idNum} .gen-type-option`).forEach(function (opt) {
+                    opt.classList.add('d-none');
+                });
+            }
+        });
+
+        // fixedTime toggle 
+        dimensionTemplate.getElementById('fixedTimeBool').addEventListener('change', function (event) {
+            if (event.target.checked) {
+                document.querySelector(`#dim-${idNum} input#fixedTime`).removeAttribute('disabled');
+            } else {
+                document.querySelector(`#dim-${idNum} input#fixedTime`).setAttribute('disabled', '');
+            }
+        });
+
+        // Add new dimension form to world form.
+        let worldForm = document.getElementById('worldForm');
+        let endOfForm = document.getElementById('endOfForm');
+        let insertedNode = worldForm.insertBefore(dimensionTemplate, endOfForm);
+    }
+
+    export(){
+
+        var miniOutput = {};
+        var elem = document.querySelector(`#dim-${this._idNum}`);
+
+        let dim_name = elem.querySelector('#dimName').value;
+        miniOutput["name"] = dim_name;
+
+        let genType = elem.querySelector('#genType').value;
+        miniOutput['generator'] = {
+            "type": genType
+        };
+
+        let ultrawarmBool = elem.querySelector('#ultrawarm').checked;
+        miniOutput['ultrawarm'] = ultrawarmBool;
+
+        let naturalBool = elem.querySelector('#natural').checked;
+        miniOutput['natural'] = naturalBool;
+
+        let coorinateScaleFloat = elem.querySelector('#coordinateScale').value;
+        miniOutput['coordinate_scale'] = Number(coorinateScaleFloat);
+
+        let hasSkylightBool = elem.querySelector('#hasSkylight').checked;
+        miniOutput['has_skylight'] = hasSkylightBool;
+
+        let hasCeilingBool = elem.querySelector('#hasCeiling').checked;
+        miniOutput['has_ceiling'] = hasCeilingBool;
+
+        let ambientLightFloat = elem.querySelector('#ambientLight').value;
+        miniOutput['ambient_light'] = Number(ambientLightFloat);
+
+        let fixedTimeEnabled = document.querySelector('#fixedTimeBool').checked;
+        if (fixedTimeEnabled) {
+            let fixedTime = elem.querySelector('#fixedTime').value;
+            miniOutput['fixed_time'] = Number(fixedTime);
+        }                    
+    
+        let piglinSafeBool = elem.querySelector('#piglinSafe').checked;
+        miniOutput['piglin_safe'] = piglinSafeBool;
+        
+        let bedWorksBool = elem.querySelector('#bedWorks').checked;
+        miniOutput['bed_works'] = bedWorksBool;
+
+        let respawnAnchorWorksBool = elem.querySelector('#respawnAnchorWorks').checked;
+        miniOutput['respawn_anchor_works'] = respawnAnchorWorksBool;
+
+        console.log("I exported!")
+        return miniOutput;
+    }
+
+}
+
+
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    var wb = new WorldBuilder();
+
+    
+
+        // 
     });
 
-    var setupDefaultWorld = function () {
-        // First, we add 3 dimensions. 
-        let addDimBtn = document.querySelector('#addDimension');
-        addDimBtn.click();
-
-        addDimBtn.click();
-        document.querySelector('#dim-1 input#dimName').value = "minecraft:the_nether";
-        document.querySelector('#dim-1 select#default-dim-names').selectedIndex = 2;
-
-        addDimBtn.click();
-        document.querySelector('#dim-2 input#dimName').value = "minecraft:the_end";
-        document.querySelector('#dim-2 select#default-dim-names').selectedIndex = 3;
-
-    };
-
-    setupDefaultWorld();
-});
