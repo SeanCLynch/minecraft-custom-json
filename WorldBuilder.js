@@ -105,11 +105,19 @@ class Dimension {
 
         // Selecting pre-set dimension name updates sidebar & input field. 
         dimensionTemplate.getElementById('default-dim-names').addEventListener('change', function (event) {
-            if (event.target.selectedIndex == 0) return;
-            let new_name = event.target.options[event.target.selectedIndex].text;
-            document.querySelector(`#dim-${idNum} input#dimName`).value = new_name;
-            document.querySelector(`li#summary-${idNum} h6`).textContent = new_name;
-            document.querySelector(`#dim-${idNum} #displayName`).textContent = new_name;
+            if (event.target.selectedIndex == 0) {
+                document.querySelector(`#dim-${idNum} input#dimName`).value = "";
+                document.querySelector(`#dim-${idNum} input#dimName`).removeAttribute('disabled');
+                return;
+            } else {
+                let new_name = event.target.options[event.target.selectedIndex].text;
+                document.querySelector(`#dim-${idNum} input#dimName`).setAttribute('disabled', '');
+                document.querySelector(`#dim-${idNum} input#dimName`).value = new_name;
+                document.querySelector(`li#summary-${idNum} h6`).textContent = new_name;
+                document.querySelector(`#dim-${idNum} #displayName`).textContent = new_name;
+            }
+                
+            
         });
 
         // Selecting pre-set generator types toggles options. 
@@ -118,9 +126,12 @@ class Dimension {
                 document.querySelectorAll(`#dim-${idNum} .gen-type-option`).forEach(function (opt) {
                     opt.classList.remove('d-none');
                 });
+                document.querySelector(`#dim-${idNum} input#genType`).value = "";
+                document.querySelector(`#dim-${idNum} input#genType`).removeAttribute('disabled');
             } else {
                 let new_name = event.target.options[event.target.selectedIndex].text;
                 document.querySelector(`#dim-${idNum} input#genType`).value = new_name;
+                document.querySelector(`#dim-${idNum} input#genType`).setAttribute('disabled', '');
                 document.querySelectorAll(`#dim-${idNum} .gen-type-option`).forEach(function (opt) {
                     opt.classList.add('d-none');
                 });
