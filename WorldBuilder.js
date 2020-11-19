@@ -1,12 +1,12 @@
-var dimension_count = 0;
-
 class WorldBuilder {
-    constructor(){
-        // Add 3 dimensions inside constructor
+    constructor() {
+        // Initialize class variables.
         this._dimensions = [];
         this._dimCount = 0;
         this._generateButton = document.querySelector("#generateBtn");
         this._addDimension = document.querySelector("#addDimension");
+
+        // Set event handlers. 
         var self = this;
         this._generateButton.addEventListener("click", function(event){
             event.preventDefault();
@@ -15,16 +15,19 @@ class WorldBuilder {
         this._addDimension.addEventListener("click", function(){
             self.addDimension(self._dimCount);
         });
+
+        // Initialize with default 3 dimensions?
         
     }
 
-    import(){
-        //Build for for JSON object
+    import() {
+        // Build form from JSON object.
     }
 
-    export(){
+    export() {
+        // Build out JSON object from form. 
         let output = {};
-        //Build all whole JSON object from form
+
         let bonus_chest = document.querySelector('#bonusChest').checked;
         output.bonus_chest = bonus_chest;
 
@@ -34,46 +37,48 @@ class WorldBuilder {
         let seed = document.querySelector('#seed').value;
         output.seed = seed;
 
-        console.log("export succesful");
         this._dimensions.forEach(dim => {
             var dimOutput = dim.export();
             output[dimOutput.name] = dimOutput;
-            console.log(dimOutput);
         });
+
         let output_string = JSON.stringify(output, null, 4);
         document.querySelector('#JSONoutput').value = output_string;
     }
 
-    addDimension(){
-        //Create new dimension and add to dimension array (this._dimensions)
+    addDimension() {
+        // Create new dimension and add to dimension array (this._dimensions)
         let newDimension = new Dimension(this._dimCount);
         this._dimCount++;
         console.log(`Dimension added Succesfully. ${this._dimCount}`)
         this._dimensions.push(newDimension);
     }
 
-    removeDimension(){
-        //Remove Dimension from Array
+    removeDimension() {
+        // Remove dimension from Array
     }
-
     
 }
 
 class Dimension {
-    constructor(idNum){
+    constructor(idNum) {
         this._idNum = idNum;
         let dimensionTemplate = document.getElementById('dimensionTemplate').content.cloneNode(true);
+
         // Set a unique ID for new dimension.
         let dimension_holder = dimensionTemplate.querySelector('.dimension-holder');
         dimension_holder.setAttribute('id', `dim-${idNum}`);
+
         // Update summary sidebar.
         let summary_template = document.getElementById('sidebarRow').content.cloneNode(true);
         summary_template.querySelector('li').setAttribute('id', `summary-${idNum}`);
         summary_template.querySelector('h6').textContent = "New Dimension";
         document.getElementById('summary-sidebar').appendChild(summary_template);
+
          // Update summary header.
         let summary_header = document.getElementById('summary-header');
         summary_header.querySelector('.badge').textContent = idNum + 1;
+
         // dimName - Dimension Names
         dimensionTemplate.getElementById('dimName').addEventListener('input', function (event) {
             let sb_item = document.querySelector(`li#summary-${idNum} h6`);
@@ -116,7 +121,7 @@ class Dimension {
         let insertedNode = worldForm.insertBefore(dimensionTemplate, endOfForm);
     }
 
-    export(){
+    export() {
 
         var miniOutput = {};
         var elem = document.querySelector(`#dim-${this._idNum}`);
@@ -147,7 +152,7 @@ class Dimension {
         let ambientLightFloat = elem.querySelector('#ambientLight').value;
         miniOutput['ambient_light'] = Number(ambientLightFloat);
 
-        let fixedTimeEnabled = document.querySelector('#fixedTimeBool').checked;
+        let fixedTimeEnabled = elem.querySelector('#fixedTimeBool').checked;
         if (fixedTimeEnabled) {
             let fixedTime = elem.querySelector('#fixedTime').value;
             miniOutput['fixed_time'] = Number(fixedTime);
@@ -168,18 +173,7 @@ class Dimension {
 
 }
 
-
-
-
-
-
-
-
 document.addEventListener('DOMContentLoaded', function () {
     var wb = new WorldBuilder();
-
-    
-
-        // 
-    });
+});
 
