@@ -6,3 +6,4 @@ Things to do:
 * (easy) Add "clear" button to JSON output area. 
 * (hard) Add "import" button to JSON output area.
 * (easy, long) Improve setting descriptions.
+* Lock dimension name and type when a preset is selected in dropdown. 

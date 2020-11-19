@@ -32,6 +32,7 @@ class WorldBuilder {
     export() {
         // Build out JSON object from form. 
         let output = {};
+        console.log("Exporting World...");
 
         let bonus_chest = document.querySelector('#bonusChest').checked;
         output.bonus_chest = bonus_chest;
@@ -52,21 +53,25 @@ class WorldBuilder {
     }
 
     addDimension() {
-        // Create new dimension and add to dimension array (this._dimensions)
-        let newDimension = new Dimension(this._dimCount);
-        this._dimCount++;
-        console.log(`Dimension added Succesfully. ${this._dimCount}`)
+        // Create new dimension and add to dimension array (this._dimensions).
+        let newDimension = new Dimension(this._dimCount++, this);
         this._dimensions.push(newDimension);
     }
 
-    removeDimension() {
+    removeDimension(idNum) {
         // Remove dimension from Array
+        console.log(`Removing dimension id=${idNum}`);
+        var reduced_dimensions = this._dimensions.filter(dim => {
+            if (dim._idNum != idNum) return dim;
+        });
+        this._dimensions = reduced_dimensions;
     }
     
 }
 
 class Dimension {
-    constructor(idNum) {
+    constructor(idNum, wb) {
+        this._wb = wb;
         this._idNum = idNum;
         let dimensionTemplate = document.getElementById('dimensionTemplate').content.cloneNode(true);
 
@@ -79,24 +84,30 @@ class Dimension {
         summary_template.querySelector('li').setAttribute('id', `summary-${idNum}`);
         summary_template.querySelector('h6').textContent = "New Dimension";
         document.getElementById('summary-sidebar').appendChild(summary_template);
-
-         // Update summary header.
         let summary_header = document.getElementById('summary-header');
         summary_header.querySelector('.badge').textContent = idNum + 1;
 
-        // dimName - Dimension Names
+        // Set event listeners within the dimension ------------------------------------------------
+        var self = this;
+
+        // Changing dimension name updates sidebar & display title.
         dimensionTemplate.getElementById('dimName').addEventListener('input', function (event) {
             let sb_item = document.querySelector(`li#summary-${idNum} h6`);
             sb_item.textContent = event.target.value;
+            let dim_title = document.querySelector(`#dim-${idNum} #displayName`);
+            dim_title.textContent = event.target.value;
         });
+
+        // Selecting pre-set dimension name updates sidebar & input field. 
         dimensionTemplate.getElementById('default-dim-names').addEventListener('change', function (event) {
             if (event.target.selectedIndex == 0) return;
             let new_name = event.target.options[event.target.selectedIndex].text;
             document.querySelector(`#dim-${idNum} input#dimName`).value = new_name;
             document.querySelector(`li#summary-${idNum} h6`).textContent = new_name;
+            document.querySelector(`#dim-${idNum} #displayName`).textContent = new_name;
         });
 
-        // genType - Generator Type
+        // Selecting pre-set generator types toggles options. 
         dimensionTemplate.getElementById('default-gen-types').addEventListener('change', function (event) {
             if (event.target.selectedIndex == 0) {
                 document.querySelectorAll(`#dim-${idNum} .gen-type-option`).forEach(function (opt) {
@@ -111,13 +122,25 @@ class Dimension {
             }
         });
 
-        // fixedTime toggle 
+        // Toggle button for fixedTime generator option. 
         dimensionTemplate.getElementById('fixedTimeBool').addEventListener('change', function (event) {
             if (event.target.checked) {
                 document.querySelector(`#dim-${idNum} input#fixedTime`).removeAttribute('disabled');
             } else {
                 document.querySelector(`#dim-${idNum} input#fixedTime`).setAttribute('disabled', '');
             }
+        });
+
+        // Remove this dimension. 
+        dimensionTemplate.getElementById('deleteDimensionBtn').addEventListener('click', function (event) {
+            event.preventDefault();
+
+            self._wb.removeDimension(idNum);
+
+            let whole_dimension = document.querySelector(`#dim-${idNum}`);
+            let dim_hr_tag = whole_dimension.previousElementSibling;
+            whole_dimension.parentElement.removeChild(dim_hr_tag);
+            whole_dimension.parentElement.removeChild(whole_dimension);
         });
 
         // Add new dimension form to world form.
@@ -127,6 +150,7 @@ class Dimension {
     }
 
     export() {
+        console.log(`Exporting dimension id=${this._idNum}`);
 
         var miniOutput = {};
         var elem = document.querySelector(`#dim-${this._idNum}`);
@@ -172,7 +196,6 @@ class Dimension {
         let respawnAnchorWorksBool = elem.querySelector('#respawnAnchorWorks').checked;
         miniOutput['respawn_anchor_works'] = respawnAnchorWorksBool;
 
-        console.log("I exported!")
         return miniOutput;
     }
 
